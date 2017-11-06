@@ -27,16 +27,29 @@ ENV ANDROID_SDK_TOOLS "24.4.1"
 RUN apt-get --quiet update --yes
 RUN apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
 
-RUN wget --quiet --output-document=android-sdk.tgz https://dl.google.com/android/android-sdk_r${ANDROID_SDK_TOOLS}-linux.tgz
-RUN tar --extract --gzip --file=android-sdk.tgz
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter android-${ANDROID_COMPILE_SDK}
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter platform-tools
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter build-tools-${ANDROID_BUILD_TOOLS}
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-android-m2repository
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-google-google_play_services
-RUN echo y | android-sdk-linux/tools/android --silent update sdk --no-ui --all --filter extra-google-m2repository
+RUN wget --quiet --output-document=android-sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
+RUN mkdir android-sdk-linux && cd android-sdk-linux && unzip ../android-sdk-tools.zip
 
-RUN chown -R "gitlab-runner:gitlab-runner" android-sdk-linux
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 
 ENV ANDROID_HOME "/android-sdk-linux"
-ENV PATH "${PATH}:/android-sdk-linux/platform-tools"
+ENV PATH "${PATH}:/android-sdk-linux/platform-tools:/android-sdk-linux/tools"
+
+RUN mkdir $ANDROID_HOME/licenses
+RUN echo 8933bad161af4178b1185d1a37fbf41ea5269c55 > $ANDROID_HOME/licenses/android-sdk-license
+RUN echo d56f5187479451eabf01fb78af6dfcb131a6481e >> $ANDROID_HOME/licenses/android-sdk-license
+RUN echo 84831b9409646a918e30573bab4c9c91346d8abd > $ANDROID_HOME/licenses/android-sdk-preview-license
+
+RUN mkdir ${HOME}/.android && touch ${HOME}/.android/repositories.cfg
+
+RUN $ANDROID_HOME/tools/bin/sdkmanager "tools" "platform-tools"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.3"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "extras;google;google_play_services"
+RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+
+RUN chown -R "gitlab-runner:gitlab-runner" $ANDROID_HOME
