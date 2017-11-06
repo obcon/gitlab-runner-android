@@ -21,7 +21,7 @@ RUN apt-get -y install libyaml-dev python-dev
 RUN pip install awscli boto3
 
 ENV ANDROID_COMPILE_SDK "25"
-ENV ANDROID_BUILD_TOOLS "24.0.0"
+ENV ANDROID_BUILD_TOOLS "25.0.3"
 ENV ANDROID_SDK_TOOLS "24.4.1"
 
 RUN apt-get --quiet update --yes
