@@ -41,8 +41,8 @@ RUN mkdir ${HOME}/.android && touch ${HOME}/.android/repositories.cfg
 
 RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 RUN $ANDROID_HOME/tools/bin/sdkmanager "tools" "platform-tools"
-RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.3"
-# RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;26.0.2" "build-tools;25.0.3"
+# RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;25.0.3"
+RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;26.0.2" "build-tools;25.0.3"
 RUN $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-25"
 # RUN $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-26" "platforms;android-25" "platforms;android-24" "platforms;android-23"
 RUN $ANDROID_HOME/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;m2repository"
