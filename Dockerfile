@@ -1,4 +1,4 @@
-FROM gitlab/gitlab-runner:v10.1.0
+FROM gitlab/gitlab-runner:v11.5.0
 
 MAINTAINER Marco Obermeyer "marco.obermeyer@obcon.de"
 
